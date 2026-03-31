@@ -1,39 +1,23 @@
-# from bs4 import BeautifulSoup
-# from src.utils import clean_text
-
-
-# def parse_html(html: str) -> dict:
-#     soup = BeautifulSoup(html, "lxml")
-
-#     # Remove noisy elements
-#     for tag in soup(["script", "style", "nav", "footer", "header", "noscript"]):
-#         tag.decompose()
-
-#     title = ""
-#     if soup.title and soup.title.string:
-#         title = clean_text(soup.title.string)
-
-#     h1 = soup.find("h1")
-#     main_heading = clean_text(h1.get_text()) if h1 else ""
-
-#     body_text = clean_text(soup.get_text(separator="\n"))
-
-#     return {
-#         "title": title,
-#         "main_heading": main_heading,
-#         "body_text": body_text
-#     }
-
-
-
-
-# src/parser.py
-
 import requests
 from bs4 import BeautifulSoup
 
 from src.utils import clean_text
 
+"""
+Parsing helpers for preparing raw source content for extraction.
+
+This module contains parsing-related utilities used to clean, organize, and
+prepare source content before structured extraction is performed.
+
+Depending on the source, this may include:
+- HTML parsing
+- text normalization
+- section isolation
+- field preparation for downstream processing
+
+This layer helps keep raw source handling separate from field extraction
+logic.
+"""
 
 def fetch_url_content(url: str) -> str:
     """

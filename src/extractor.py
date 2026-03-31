@@ -1,93 +1,26 @@
-# import re
-# from src.utils import generate_foa_id, normalize_date, extract_section_text
-
-
-# def extract_fields(parsed_data: dict, source_url: str) -> dict:
-#     title = parsed_data.get("main_heading") or parsed_data.get("title") or "Untitled FOA"
-#     body_text = parsed_data.get("body_text", "")
-
-#     foa_id = generate_foa_id(source_url)
-
-#     agency = "Unknown"
-#     body_lower = body_text.lower()
-
-#     if "national science foundation" in body_lower or "nsf" in body_lower:
-#         agency = "NSF"
-#     elif "grants.gov" in source_url.lower():
-#         agency = "Grants.gov"
-#     elif "national institutes of health" in body_lower or "nih" in body_lower:
-#         agency = "NIH"
-
-#     open_date = ""
-#     close_date = ""
-
-#     # More robust line-based extraction
-#     open_patterns = [
-#         r"(?:Posted Date|Open Date|Posted|Published Date)\s*[:\-]?\s*(.+)"
-#     ]
-
-#     close_patterns = [
-#         r"(?:Close Date|Application Deadline|Due Date|Closing Date|Closing)\s*[:\-]?\s*(.+)"
-#     ]
-
-#     for pattern in open_patterns:
-#         match = re.search(pattern, body_text, flags=re.IGNORECASE)
-#         if match:
-#             open_date = normalize_date(match.group(1).strip())
-#             break
-
-#     for pattern in close_patterns:
-#         match = re.search(pattern, body_text, flags=re.IGNORECASE)
-#         if match:
-#             close_date = normalize_date(match.group(1).strip())
-#             break
-
-#     eligibility_text = extract_section_text(
-#         ["Eligibility", "Eligible Applicants", "Who May Apply"],
-#         body_text,
-#         max_chars=1200
-#     )
-
-#     program_description = extract_section_text(
-#         ["Description", "Program Description", "Synopsis", "Overview"],
-#         body_text,
-#         max_chars=2000
-#     )
-
-#     if not program_description:
-#         program_description = body_text[:2000]
-
-#     award_match = re.search(
-#         r"(\$[\d,]+(?:\s*-\s*\$[\d,]+)?|\$[\d,]+\s*(?:to|-)\s*\$[\d,]+)",
-#         body_text
-#     )
-#     award_range = award_match.group(1) if award_match else "Not specified"
-
-#     return {
-#         "foa_id": foa_id,
-#         "title": title,
-#         "agency": agency,
-#         "open_date": open_date,
-#         "close_date": close_date,
-#         "eligibility_text": eligibility_text,
-#         "program_description": program_description,
-#         "award_range": award_range,
-#         "source_url": source_url,
-#         "tags": {
-#             "research_domains": [],
-#             "methods_approaches": [],
-#             "populations": [],
-#             "sponsor_themes": []
-#         }
-#     }
-
-
-# src/extractor.py
-
 import re
 
 from src.utils import clean_text, normalize_date, generate_foa_id
 
+"""
+Field extraction logic for FOA-style funding opportunity records.
+
+This module contains functions responsible for extracting structured fields
+from raw source content, especially HTML-based records such as Grants.gov
+opportunity pages.
+
+The goal of this layer is to convert semi-structured content into a clean,
+normalized dictionary that can be used downstream for tagging and export.
+
+Typical extracted fields include:
+- title
+- agency
+- open / close dates
+- eligibility text
+- program description
+- award range
+- source URL
+"""
 
 def _extract_between(text: str, start_label: str, end_labels: list[str]) -> str:
     """

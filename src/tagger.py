@@ -1,5 +1,26 @@
 import re
 
+"""
+Rule-based semantic tagging for normalized FOA records.
+
+This module applies deterministic ontology-aligned tags to funding
+opportunity records based on their textual content.
+
+The tagging system is designed to be:
+- lightweight
+- interpretable
+- reproducible
+- easy to extend
+
+Current semantic tag groups include:
+- research domains
+- methods / approaches
+- populations
+- sponsor themes
+
+Tagging is currently based on curated keyword and phrase matching.
+"""
+
 ONTOLOGY = {
     "research_domains": {
         "Artificial Intelligence": ["artificial intelligence", "machine learning", "deep learning"],
@@ -33,6 +54,12 @@ def contains_phrase(text: str, phrase: str) -> bool:
 
 
 def apply_tags(foa_data: dict) -> dict:
+    """
+    Apply deterministic semantic tags to a normalized FOA record.
+
+    Tags are assigned by checking the record text against curated keyword
+    groups mapped to ontology-aligned categories.
+    """    
     combined_text = " ".join([
         foa_data.get("title", ""),
         foa_data.get("eligibility_text", ""),

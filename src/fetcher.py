@@ -1,5 +1,8 @@
 import requests
 
+"""
+Utilities for fetching raw source content from public FOA pages
+"""
 
 def fetch_url(url: str) -> str:
     headers = {

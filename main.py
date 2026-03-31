@@ -1,44 +1,3 @@
-# import argparse
-# import os
-
-# from src.fetcher import fetch_url
-# from src.parser import parse_html
-# from src.extractor import extract_fields
-# from src.tagger import apply_tags
-# from src.exporter import export_json, export_csv
-
-
-# def main():
-#     parser = argparse.ArgumentParser(description="FOA Ingestion + Semantic Tagging")
-#     parser.add_argument("--url", required=True, help="FOA URL to ingest")
-#     parser.add_argument("--out_dir", required=True, help="Output directory")
-#     args = parser.parse_args()
-
-#     os.makedirs(args.out_dir, exist_ok=True)
-
-#     print("[INFO] Fetching URL...")
-#     html = fetch_url(args.url)
-
-#     print("[INFO] Parsing HTML...")
-#     parsed_data = parse_html(html)
-
-#     print("[INFO] Extracting structured fields...")
-#     foa_data = extract_fields(parsed_data, args.url)
-
-#     print("[INFO] Applying semantic tags...")
-#     foa_data = apply_tags(foa_data)
-
-#     print("[INFO] Exporting outputs...")
-#     export_json(foa_data, args.out_dir)
-#     export_csv(foa_data, args.out_dir)
-
-#     print("[SUCCESS] Files created successfully in:", args.out_dir)
-
-
-# if __name__ == "__main__":
-#     main()
-# main.py
-
 import os
 import argparse
 
@@ -49,8 +8,31 @@ from src.exporter import export_outputs
 from src.sources.grants_gov import ingest_grants_gov
 from src.sources.nsf_api import fetch_nsf_awards, normalize_nsf_award
 
+"""
+Main entry point for the FOA ingestion and semantic tagging pipeline.
+
+This script acts as the command-line interface for the project. It allows
+the user to run ingestion workflows for supported funding opportunity
+sources, normalize the extracted data into a common schema, apply
+deterministic semantic tags, and export the final outputs as JSON and CSV.
+
+Currently supported sources:
+* Grants.gov (HTML-based ingestion)
+* NSF Awards API (structured JSON ingestion)
+
+Example usage:
+    python main.py --source grants --url "<FOA_URL>" --out_dir ./out
+    python main.py --source nsf --keyword "AI" --out_dir ./out
+"""
 
 def main():
+    """
+    Parse CLI arguments and run the selected ingestion workflow.
+
+    Based on the requested source, this function triggers the appropriate
+    ingestion pipeline, applies semantic tagging, and exports the processed
+    output to the specified directory.
+    """
     parser = argparse.ArgumentParser(description="FOA Ingestion + Semantic Tagging Pipeline")
 
     parser.add_argument(

@@ -2,8 +2,27 @@ import re
 import hashlib
 from dateutil import parser as date_parser
 
+"""
+Shared utility functions used across the FOA ingestion pipeline.
+
+This module contains helper functions for common reusable tasks such as:
+- text cleaning
+- date normalization
+- FOA ID generation
+- small formatting and normalization operations
+
+Keeping these helpers centralized reduces duplication and makes the
+pipeline easier to test and maintain.
+"""
+
 
 def clean_text(text: str) -> str:
+    """
+    Clean raw text by removing extra whitespace and formatting noise.
+
+    This helps standardize extracted content before normalization,
+    tagging, and export.
+    """
     if not text:
         return ""
     text = re.sub(r"\r", " ", text)
@@ -14,10 +33,22 @@ def clean_text(text: str) -> str:
 
 
 def generate_foa_id(url: str) -> str:
+    """
+    Normalize a raw date string into ISO format (YYYY-MM-DD).
+
+    If the date cannot be parsed reliably, the original or fallback
+    value may be returned depending on implementation.
+    """    
     return hashlib.md5(url.encode()).hexdigest()[:10]
 
 
 def normalize_date(date_str: str) -> str:
+    """
+    Normalize a raw date string into ISO format (YYYY-MM-DD).
+
+    If the date cannot be parsed reliably, the original or fallback
+    value may be returned depending on implementation.
+    """    
     try:
         dt = date_parser.parse(date_str, fuzzy=True)
         return dt.strftime("%Y-%m-%d")

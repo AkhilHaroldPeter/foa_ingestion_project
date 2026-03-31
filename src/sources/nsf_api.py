@@ -1,6 +1,23 @@
 import requests
 from src.utils import clean_text, generate_foa_id, normalize_date
 
+"""
+Source-specific ingestion and normalization logic for the NSF Awards API.
+
+This module handles retrieval of structured funding-related records from the
+NSF Awards API and transforms them into the project's normalized FOA schema.
+
+Unlike HTML-based sources, NSF data is already returned in structured JSON,
+so this module focuses primarily on:
+- API retrieval
+- record selection
+- field normalization
+- schema alignment
+
+For this project, NSF award records are used as a structured funding-data
+source to validate normalization and semantic tagging across heterogeneous
+inputs.
+"""
 
 def fetch_nsf_awards(keyword: str, limit: int = 1) -> list:
     """
