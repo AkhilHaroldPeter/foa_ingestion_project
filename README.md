@@ -13,6 +13,31 @@ It currently supports:
 
 The goal is to demonstrate a clean, extensible ingestion architecture that can later be expanded to support additional funding sources such as **NIH**, **NSF solicitations**, **federal grant portals**, or **PDF-based FOAs**.
 
+
+
+
+
+## Contents
+
+- [`architecture.md`](docs/architecture.md)  
+  Overview of the project structure and module responsibilities.
+
+- [`data_flow.md`](docs/data_flow.md)  
+  End-to-end explanation of how data moves through the pipeline.
+
+- [`tagging_logic.md`](docs/tagging_logic.md)  
+  Explanation of the current semantic tagging approach.
+
+- [`design_decisions.md`](docs/design_decisions.md)  
+  Notes on engineering choices and implementation tradeoffs.
+
+- [`limitations_and_next_steps.md`](docs/limitations_and_next_steps.md)  
+  Current project limitations and realistic future improvements.
+
+
+
+These docs are intended to make the current MVP easier to understand, maintain, and extend.
+
 ---
 
 ## Problem Statement

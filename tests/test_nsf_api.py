@@ -1,5 +1,3 @@
-# tests/test_nsf_api.py
-
 from src.sources.nsf_api import normalize_nsf_award
 
 
